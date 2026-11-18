@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Calificaciones - Caso 6</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #f1f5f9;
+            color: #1e293b;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+        }
+        header {
+            background-color: #0f172a;
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        header p {
+            margin: 4px 0 0;
+            font-size: 0.9rem;
+            color: #94a3b8;
+        }
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            margin-bottom: 20px;
+        }
+        .card h2 {
+            margin-top: 0;
+            font-size: 1.15rem;
+            color: #0f172a;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 8px;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            font-size: 1rem;
+        }
+        input:focus {
+            outline: none;
+            border-color: #2563eb;
+        }
+        .button-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        button {
+            padding: 11px 18px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .btn-primary {
+            background-color: #2563eb;
+            color: white;
+            flex: 1;
+        }
+        .btn-primary:hover {
+            background-color: #1d4ed8;
+        }
+        .btn-success {
+            background-color: #059669;
+            color: white;
+            flex: 1;
+        }
+        .btn-success:hover {
+            background-color: #047857;
+        }
+        .btn-test {
+            background-color: #f59e0b;
+            color: #0f172a;
+            padding: 8px 14px;
+            font-size: 0.9rem;
+        }
+        .btn-test:hover {
+            background-color: #d97706;
+            color: white;
+        }
+        .mensaje {
+            padding: 14px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+            display: none;
+        }
+        .mensaje.exito {
+            background-color: #dcfce7;
+            color: #166534;
+            border: 1px solid #86efac;
+            display: block;
+        }
+        .mensaje.error {
+            background-color: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+            display: block;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .stat-box {
+            background: white;
+            padding: 16px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+            border-top: 4px solid #2563eb;
+        }
+        .stat-box span {
+            display: block;
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-bottom: 6px;
+        }
+        .stat-box strong {
+            font-size: 1.35rem;
+            color: #0f172a;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        th {
+            background-color: #f8fafc;
+            color: #334155;
+        }
+        .badge {
+            padding: 4px 10px;
+            border-radius: 999px;
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+        .badge-aprobado {
+            background-color: #dcfce7;
+            color: #166534;
+        }
+        .badge-reprobado {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+        .empty-row {
+            text-align: center;
+            color: #64748b;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div>
+                <h1>Registro de Calificaciones</h1>
+                <p>Escala de evaluación: 0 a 10 | Nota mínima de aprobación: 7.0</p>
+            </div>
+            <button type="button" class="btn-test" onclick="cargarDatosPrueba()">Cargar Datos de Prueba</button>
+        </header>
+
+        <!-- Panel de alertas y resultados rápidos -->
+        <div id="panelMensaje" class="mensaje"></div>
+
+        <!-- Formulario de ingreso de calificaciones -->
+        <section class="card">
+            <h2>1. Ingreso de Calificación</h2>
+            <div class="form-row">
+                <div>
+                    <label for="nombreEstudiante">Nombre del Estudiante:</label>
+                    <input type="text" id="nombreEstudiante" placeholder="Ej. Ana">
+                </div>
+                <div>
+                    <label for="notaEstudiante">Nota Obtenida (0 - 10):</label>
+                    <input type="number" id="notaEstudiante" placeholder="Ej. 9" min="0" max="10" step="0.1">
+                </div>
+            </div>
+            <div class="button-group">
+                <button type="button" class="btn-primary" onclick="registrarNota()">Registrar Nota</button>
+                <button type="button" class="btn-success" onclick="calcularEstadisticas()">Calcular Estadísticas</button>
+            </div>
+        </section>
+
+        <!-- Sección de Estadísticas -->
+        <section class="stats-grid">
+            <div class="stat-box">
+                <span>Promedio General</span>
+                <strong id="statPromedio">-</strong>
+            </div>
+            <div class="stat-box">
+                <span>Nota Más Alta</span>
+                <strong id="statMaxima">-</strong>
+            </div>
+            <div class="stat-box">
+                <span>Porcentaje de Aprobados</span>
+                <strong id="statAprobados">-</strong>
+            </div>
+            <div class="stat-box">
+                <span>Total Estudiantes / Suma</span>
+                <strong id="statTotal">0 (Suma: 0.0)</strong>
+            </div>
+        </section>
+
+        <!-- Tabla de estudiantes registrados -->
+        <section class="card">
+            <h2>2. Listado de Estudiantes Registrados</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Estudiante</th>
+                        <th>Nota</th>
+                        <th>Rendimiento</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaEstudiantes">
+                    <tr>
+                        <td colspan="4" class="empty-row">No hay calificaciones registradas todavía.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </div>
+
+    <!-- Enlace al archivo JavaScript -->
+    <script src="./src/app.js"></script>
+</body>
+</html>
